@@ -7,6 +7,7 @@
     <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
     <IntuitiveSorting />
     <IntuitiveSorting_SP2 />
+    <MapboxVectorStylesAndLayers />
     <_.fcp.MarkAnimation.true...MarkAnimation />
     <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
     <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
@@ -345,10 +346,15 @@
       <column caption='Month' datatype='string' name='[month]' role='dimension' type='nominal' />
       <column caption='Nb Articles' datatype='integer' name='[nb_articles]' role='measure' type='quantitative' />
       <column caption='Payment Method' datatype='string' name='[payment_method]' role='dimension' type='nominal' />
-      <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+      <column caption='Platform' datatype='string' name='[platform]' role='dimension' semantic-role='[Country].[Name]' type='nominal'>
+        <aliases>
+          <alias key='&quot;ES&quot;' value='ESP' />
+          <alias key='&quot;GB&quot;' value='UK' />
+        </aliases>
+      </column>
       <column caption='Score' datatype='integer' name='[score]' role='measure' type='quantitative' />
       <column-instance column='[day]' derivation='None' name='[none:day:nk]' pivot='key' type='nominal' />
-      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-aliased-fields='true' show-structure='true' />
       <style>
         <style-rule element='mark'>
           <encoding attr='color' field='[none:day:nk]' type='palette'>
@@ -410,6 +416,9 @@
       </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
     </datasource>
   </datasources>
+  <mapsources>
+    <mapsource name='Tableau' />
+  </mapsources>
   <worksheets>
     <worksheet name='B2B/Month (2)'>
       <layout-options>
@@ -606,7 +615,12 @@
             <column-instance column='[device]' derivation='None' name='[none:device:nk]' pivot='key' type='nominal' />
             <column-instance column='[first_order]' derivation='None' name='[none:first_order:nk]' pivot='key' type='nominal' />
             <column-instance column='[platform]' derivation='None' name='[none:platform:nk]' pivot='key' type='nominal' />
-            <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+            <column caption='Platform' datatype='string' name='[platform]' role='dimension' semantic-role='[Country].[Name]' type='nominal'>
+              <aliases>
+                <alias key='&quot;ES&quot;' value='ESP' />
+                <alias key='&quot;GB&quot;' value='UK' />
+              </aliases>
+            </column>
             <column caption='Score' datatype='integer' name='[score]' role='measure' type='quantitative' />
           </datasource-dependencies>
           <shelf-sorts>
@@ -635,20 +649,45 @@
     <worksheet name='Sheet 4'>
       <table>
         <view>
-          <datasources />
+          <datasources>
+            <datasource caption='mano (1)' name='federated.0tuz70s0zcvdld1h0hizs1sd7ytx' />
+          </datasources>
+          <mapsources>
+            <mapsource name='Tableau' />
+          </mapsources>
+          <datasource-dependencies datasource='federated.0tuz70s0zcvdld1h0hizs1sd7ytx'>
+            <column-instance column='[platform]' derivation='None' name='[none:platform:nk]' pivot='key' type='nominal' />
+            <column caption='Platform' datatype='string' name='[platform]' role='dimension' semantic-role='[Country].[Name]' type='nominal'>
+              <aliases>
+                <alias key='&quot;ES&quot;' value='ESP' />
+                <alias key='&quot;GB&quot;' value='UK' />
+              </aliases>
+            </column>
+          </datasource-dependencies>
           <aggregation value='true' />
         </view>
-        <style />
+        <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[Longitude (generated)]' field-type='quantitative' max='3151069.1077671456' min='-3267192.5839170087' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[Latitude (generated)]' field-type='quantitative' max='8028681.0850966014' min='4307204.1856548088' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+          </style-rule>
+          <style-rule element='map'>
+            <format attr='washout' value='0.0' />
+          </style-rule>
+        </style>
         <panes>
           <pane selection-relaxation-option='selection-relaxation-allow'>
             <view>
               <breakdown value='auto' />
             </view>
             <mark class='Automatic' />
+            <encodings>
+              <lod column='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:platform:nk]' />
+            </encodings>
           </pane>
         </panes>
-        <rows />
-        <cols />
+        <rows>[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[Latitude (generated)]</rows>
+        <cols>[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[Longitude (generated)]</cols>
       </table>
       <simple-id uuid='{93F0B2F6-A53C-4488-90C3-0507B6FBEB6A}' />
     </worksheet>
@@ -717,6 +756,80 @@
         <zone h='15755' id='10' name='Device/B2B/Day' param='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:is_b2b:nk]' type-v2='filter' values='database' w='14788' x='68375' y='57682' />
       </zones>
       <simple-id uuid='{6FE58676-D4D8-4610-B1E1-08C50B388944}' />
+    </dashboard>
+    <dashboard _.fcp.AccessibleZoneTabOrder.true...enable-sort-zone-taborder='true' name='Dashboard 2'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Recommendations:</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <style />
+      <size maxheight='768' maxwidth='1366' minheight='768' minwidth='1366' preset-index='17' sizing-mode='fixed' />
+      <zones>
+        <zone h='100000' id='2' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone h='97916' id='8' param='horz' type-v2='layout-flow' w='98828' x='586' y='1042'>
+            <zone fixed-size='160' h='97916' id='7' is-fixed='true' param='vert' type-v2='layout-flow' w='98828' x='586' y='1042' />
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+        <zone forceUpdate='true' h='50000' id='1' is-centered='0' is-scaled='1' param='C:/Users/Admin/Desktop/Ambiente de trabalho/Curriculum Vitae/Eu/IMG_7164.jpg' type-v2='bitmap' w='18009' x='67277' y='23828' />
+        <zone forceUpdate='true' h='37109' id='9' type-v2='text' w='36896' x='8126' y='27214'>
+          <formatted-text>
+            <run>- Marketing campaign targetting: 
+      - Phone (APP?)
+           - SMS
+           - Weekdays: Businesses
+           - Sunday/Monday: Customer
+
+Target Campaigns:
+      - Products family like Tools, Garden and the other
+
+- Do not target:
+      - Summer Months: Customer and Business
+ </run>
+          </formatted-text>
+        </zone>
+        <zone h='14583' id='6' type-v2='title' w='29502' x='3587' y='8333' />
+      </zones>
+      <simple-id uuid='{A0C1ED9E-9264-4B11-8450-61434FF8A244}' />
+    </dashboard>
+    <dashboard name='Story 1' type='storyboard'>
+      <style />
+      <size maxheight='964' maxwidth='1016' minheight='964' minwidth='1016' />
+      <zones>
+        <zone h='100000' id='2' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone h='98340' id='1' param='vert' removable='false' type-v2='layout-flow' w='98426' x='787' y='830'>
+            <zone h='4357' id='3' type-v2='title' w='98426' x='787' y='830' />
+            <zone h='10477' id='4' is-fixed='true' paired-zone-id='5' removable='false' type-v2='flipboard-nav' w='98426' x='787' y='5187' />
+            <zone h='83506' id='5' paired-zone-id='4' removable='false' type-v2='flipboard' w='98426' x='787' y='15664'>
+              <flipboard active-id='1' nav-type='caption' show-nav-arrows='true'>
+                <story-points>
+                  <story-point captured-sheet='' id='1' />
+                </story-points>
+              </flipboard>
+            </zone>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+        <zone flipboard-zone-id='5' h='3320' id='6' story-point-id='1' type-v2='text' w='21654' x='33661' y='31846'>
+          <formatted-text>
+            <run>disaniadiomiacnasc&#10;</run>
+          </formatted-text>
+        </zone>
+      </zones>
+      <simple-id uuid='{F3ABD06B-A403-467F-8B58-FEE6BD84FDD8}' />
     </dashboard>
   </dashboards>
   <windows source-height='30'>
@@ -860,6 +973,17 @@
         <device name='Generic Desktop Monitor' type='Desktop' />
       </device-preview>
       <simple-id uuid='{0D1565C1-B366-4CB8-91CC-ED7FA1D420DF}' />
+    </window>
+    <window class='dashboard' name='Dashboard 2'>
+      <viewpoints />
+      <active id='9' />
+      <device-preview visible='true' />
+      <simple-id uuid='{9661E31B-1CCE-4459-B373-EBC3E4CB6816}' />
+    </window>
+    <window class='dashboard' name='Story 1'>
+      <viewpoints />
+      <active id='6' />
+      <simple-id uuid='{602E77FE-76DA-4637-911F-D8192DC1A1B8}' />
     </window>
   </windows>
 </workbook>
