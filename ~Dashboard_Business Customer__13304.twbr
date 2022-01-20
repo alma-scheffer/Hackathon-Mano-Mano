@@ -5,6 +5,9 @@
   <document-format-change-manifest>
     <_.fcp.AccessibleZoneTabOrder.true...AccessibleZoneTabOrder />
     <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <AutoCreateAndUpdateDSDPhoneLayouts />
+    <IntuitiveSorting />
+    <IntuitiveSorting_SP2 />
     <_.fcp.MarkAnimation.true...MarkAnimation />
     <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
     <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
@@ -12,6 +15,7 @@
     <SetMembershipControl />
     <SheetIdentifierTracking />
     <WindowsPersistSimpleIdentifiers />
+    <WorksheetBackgroundTransparency />
     <ZoneBackgroundTransparency />
   </document-format-change-manifest>
   <preferences>
@@ -324,7 +328,12 @@
         </aliases>
       </column>
       <column caption='Family' datatype='string' name='[family]' role='dimension' type='nominal' />
-      <column caption='First Order' datatype='boolean' name='[first_order]' role='dimension' type='nominal' />
+      <column caption='First Order' datatype='boolean' name='[first_order]' role='dimension' type='nominal'>
+        <aliases>
+          <alias key='false' value='Not First User' />
+          <alias key='true' value='First User' />
+        </aliases>
+      </column>
       <column caption='Id' datatype='integer' name='[id]' role='dimension' type='ordinal' />
       <column caption='Is B2B' datatype='boolean' name='[is_b2b]' role='dimension' type='nominal'>
         <aliases>
@@ -403,6 +412,78 @@
     </datasource>
   </datasources>
   <worksheets>
+    <worksheet name='B2B/Month (2)'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Total Purchases by Month and Business Customer</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='mano (1)' name='federated.0tuz70s0zcvdld1h0hizs1sd7ytx' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0tuz70s0zcvdld1h0hizs1sd7ytx'>
+            <column-instance column='[id]' derivation='Count' name='[cnt:id:qk]' pivot='key' type='quantitative' />
+            <column caption='Id' datatype='integer' name='[id]' role='dimension' type='ordinal' />
+            <column caption='Is B2B' datatype='boolean' name='[is_b2b]' role='dimension' type='nominal'>
+              <aliases>
+                <alias key='false' value='Not Business Customer' />
+                <alias key='true' value='Business Customer' />
+              </aliases>
+            </column>
+            <column caption='Month' datatype='string' name='[month]' role='dimension' type='nominal' />
+            <column-instance column='[is_b2b]' derivation='None' name='[none:is_b2b:nk]' pivot='key' type='nominal' />
+            <column-instance column='[month]' derivation='None' name='[none:month:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='quantitative' column='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[cnt:id:qk]' included-values='all' />
+          <filter class='categorical' column='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:is_b2b:nk]'>
+            <groupfilter function='union' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:is_b2b:nk]' member='false' />
+              <groupfilter function='member' level='[none:is_b2b:nk]' member='true' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[cnt:id:qk]</column>
+            <column>[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:is_b2b:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[cnt:id:qk]' scope='rows' value='Total Purchases' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:month:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='pane'>
+                <format attr='minheight' value='178' />
+                <format attr='maxheight' value='178' />
+                <format attr='minwidth' value='60' />
+                <format attr='maxwidth' value='60' />
+                <format attr='aspect' value='0' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[cnt:id:qk]</rows>
+        <cols>([federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:is_b2b:nk] / [federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:month:nk])</cols>
+      </table>
+      <simple-id uuid='{F17A76ED-26F2-4B08-93EF-58DC5EF36B9E}' />
+    </worksheet>
     <worksheet name='Device/B2B/Day'>
       <layout-options>
         <title>
@@ -495,11 +576,11 @@
       </table>
       <simple-id uuid='{603FBFD1-CA16-443E-B61D-C1E901AD6F89}' />
     </worksheet>
-    <worksheet name='Device/B2B/Day (2)'>
+    <worksheet name='Score/First Users/Device/Country'>
       <layout-options>
         <title>
           <formatted-text>
-            <run>Total Purchases by Month and Business Customer</run>
+            <run fontalignment='1'>Avg Score by First Users, Device and Country</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -509,35 +590,32 @@
             <datasource caption='mano (1)' name='federated.0tuz70s0zcvdld1h0hizs1sd7ytx' />
           </datasources>
           <datasource-dependencies datasource='federated.0tuz70s0zcvdld1h0hizs1sd7ytx'>
-            <column-instance column='[id]' derivation='Count' name='[cnt:id:qk]' pivot='key' type='quantitative' />
-            <column caption='Id' datatype='integer' name='[id]' role='dimension' type='ordinal' />
-            <column caption='Is B2B' datatype='boolean' name='[is_b2b]' role='dimension' type='nominal'>
+            <column-instance column='[score]' derivation='Avg' name='[avg:score:qk]' pivot='key' type='quantitative' />
+            <column caption='Device' datatype='string' name='[device]' role='dimension' type='nominal'>
               <aliases>
-                <alias key='false' value='Not Business Customer' />
-                <alias key='true' value='Business Customer' />
+                <alias key='&quot;desktop&quot;' value='Desktop' />
+                <alias key='&quot;phone&quot;' value='Phone' />
+                <alias key='&quot;tablet&quot;' value='Tablet' />
               </aliases>
             </column>
-            <column caption='Month' datatype='string' name='[month]' role='dimension' type='nominal' />
-            <column-instance column='[is_b2b]' derivation='None' name='[none:is_b2b:nk]' pivot='key' type='nominal' />
-            <column-instance column='[month]' derivation='None' name='[none:month:nk]' pivot='key' type='nominal' />
+            <column caption='First Order' datatype='boolean' name='[first_order]' role='dimension' type='nominal'>
+              <aliases>
+                <alias key='false' value='Not First User' />
+                <alias key='true' value='First User' />
+              </aliases>
+            </column>
+            <column-instance column='[device]' derivation='None' name='[none:device:nk]' pivot='key' type='nominal' />
+            <column-instance column='[first_order]' derivation='None' name='[none:first_order:nk]' pivot='key' type='nominal' />
+            <column-instance column='[platform]' derivation='None' name='[none:platform:nk]' pivot='key' type='nominal' />
+            <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+            <column caption='Score' datatype='integer' name='[score]' role='measure' type='quantitative' />
           </datasource-dependencies>
-          <filter class='quantitative' column='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[cnt:id:qk]' included-values='all' />
-          <filter class='categorical' column='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:is_b2b:nk]'>
-            <groupfilter function='union' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:is_b2b:nk]' member='false' />
-              <groupfilter function='member' level='[none:is_b2b:nk]' member='true' />
-            </groupfilter>
-          </filter>
-          <slices>
-            <column>[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[cnt:id:qk]</column>
-            <column>[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:is_b2b:nk]</column>
-          </slices>
+          <shelf-sorts>
+            <shelf-sort-v2 dimension-to-sort='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:platform:nk]' direction='ASC' measure-to-sort-by='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[avg:score:qk]' shelf='columns' />
+          </shelf-sorts>
           <aggregation value='true' />
         </view>
         <style>
-          <style-rule element='axis'>
-            <format attr='title' class='0' field='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[cnt:id:qk]' scope='rows' value='Total Purchases' />
-          </style-rule>
           <style-rule element='worksheet'>
             <format attr='display-field-labels' scope='cols' value='false' />
           </style-rule>
@@ -548,24 +626,52 @@
               <breakdown value='auto' />
             </view>
             <mark class='Automatic' />
-            <encodings>
-              <color column='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:month:nk]' />
-            </encodings>
-            <style>
-              <style-rule element='pane'>
-                <format attr='minheight' value='178' />
-                <format attr='maxheight' value='178' />
-                <format attr='minwidth' value='60' />
-                <format attr='maxwidth' value='60' />
-                <format attr='aspect' value='0' />
-              </style-rule>
-            </style>
           </pane>
         </panes>
-        <rows>[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[cnt:id:qk]</rows>
-        <cols>([federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:is_b2b:nk] / [federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:month:nk])</cols>
+        <rows>[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[avg:score:qk]</rows>
+        <cols>([federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:platform:nk] / ([federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:device:nk] / [federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:first_order:nk]))</cols>
       </table>
-      <simple-id uuid='{F17A76ED-26F2-4B08-93EF-58DC5EF36B9E}' />
+      <simple-id uuid='{76CCDE61-ECE4-4F97-BFD6-74A3E3A3F24D}' />
+    </worksheet>
+    <worksheet name='Sheet 4'>
+      <table>
+        <view>
+          <datasources />
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{93F0B2F6-A53C-4488-90C3-0507B6FBEB6A}' />
+    </worksheet>
+    <worksheet name='Sheet 5'>
+      <table>
+        <view>
+          <datasources />
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{DAA94E2A-48FF-4C2D-81A8-0A5717175DAE}' />
     </worksheet>
   </worksheets>
   <dashboards>
@@ -595,43 +701,7 @@
       <zones>
         <zone h='100000' id='2' type-v2='layout-basic' w='100000' x='0' y='0'>
           <zone h='97916' id='5' param='horz' type-v2='layout-flow' w='98828' x='586' y='1042'>
-            <zone h='97916' id='3' type-v2='layout-basic' w='68008' x='586' y='1042'>
-              <zone h='97916' id='1' name='Device/B2B/Day' w='68008' x='586' y='1042'>
-                <zone-style>
-                  <format attr='border-color' value='#000000' />
-                  <format attr='border-style' value='none' />
-                  <format attr='border-width' value='0' />
-                  <format attr='margin' value='4' />
-                </zone-style>
-              </zone>
-            </zone>
-            <zone fixed-size='421' h='97916' id='4' is-fixed='true' param='vert' type-v2='layout-flow' w='30820' x='68594' y='1042'>
-              <zone h='16667' id='9' name='Device/B2B/Day' param='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:device:nk]' type-v2='filter' values='database' w='30820' x='68594' y='1042'>
-                <zone-style>
-                  <format attr='border-color' value='#000000' />
-                  <format attr='border-style' value='none' />
-                  <format attr='border-width' value='0' />
-                  <format attr='margin' value='4' />
-                </zone-style>
-              </zone>
-              <zone h='16667' id='10' name='Device/B2B/Day' param='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:is_b2b:nk]' type-v2='filter' values='database' w='30820' x='68594' y='17709'>
-                <zone-style>
-                  <format attr='border-color' value='#000000' />
-                  <format attr='border-style' value='none' />
-                  <format attr='border-width' value='0' />
-                  <format attr='margin' value='4' />
-                </zone-style>
-              </zone>
-              <zone h='44922' id='11' name='Device/B2B/Day (2)' w='30820' x='68594' y='34376'>
-                <layout-cache cell-count-w='8' has-max-size-h='true' maxheight='345' minheight='345' non-cell-size-w='70' type-h='scalable' type-w='cell' />
-                <zone-style>
-                  <format attr='border-color' value='#000000' />
-                  <format attr='border-style' value='none' />
-                  <format attr='border-width' value='0' />
-                  <format attr='margin' value='4' />
-                </zone-style>
-              </zone>
-            </zone>
+            <zone h='97916' id='3' type-v2='layout-basic' w='98828' x='586' y='1042' />
           </zone>
           <zone-style>
             <format attr='border-color' value='#000000' />
@@ -640,8 +710,46 @@
             <format attr='margin' value='8' />
           </zone-style>
         </zone>
+        <zone h='45052' id='1' name='Device/B2B/Day' w='66837' x='220' y='54167' />
+        <zone h='47005' id='11' name='B2B/Month (2)' w='46486' x='952' y='1563'>
+          <layout-cache cell-count-w='8' has-max-size-h='true' maxheight='355' minheight='355' non-cell-size-w='70' type-h='scalable' type-w='cell' />
+        </zone>
+        <zone h='16667' id='9' name='Device/B2B/Day' param='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:device:nk]' type-v2='filter' values='database' w='12299' x='85139' y='55990' />
+        <zone h='15755' id='10' name='Device/B2B/Day' param='[federated.0tuz70s0zcvdld1h0hizs1sd7ytx].[none:is_b2b:nk]' type-v2='filter' values='database' w='14788' x='68375' y='57682' />
       </zones>
       <simple-id uuid='{6FE58676-D4D8-4610-B1E1-08C50B388944}' />
+    </dashboard>
+    <dashboard _.fcp.AccessibleZoneTabOrder.true...enable-sort-zone-taborder='true' name='Dashboard 2'>
+      <style />
+      <size maxheight='768' maxwidth='1366' minheight='768' minwidth='1366' preset-index='0' sizing-mode='fixed' />
+      <zones>
+        <zone h='100000' id='4' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+        <zone h='97786' id='3' name='Score/First Users/Device/Country' w='60102' x='2416' y='1823' />
+      </zones>
+      <devicelayouts>
+        <devicelayout auto-generated='true' name='Phone'>
+          <size maxheight='700' minheight='700' sizing-mode='vscroll' />
+          <zones>
+            <zone h='100000' id='2' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='1' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000' />
+              <zone-style>
+                <format attr='border-color' value='#000000' />
+                <format attr='border-style' value='none' />
+                <format attr='border-width' value='0' />
+                <format attr='margin' value='8' />
+              </zone-style>
+            </zone>
+          </zones>
+        </devicelayout>
+      </devicelayouts>
+      <simple-id uuid='{CB711D55-C40F-4CE0-820C-D00E3D620788}' />
     </dashboard>
   </dashboards>
   <windows source-height='30'>
@@ -673,7 +781,7 @@
       </cards>
       <simple-id uuid='{EBEA0EC3-D174-4AFE-9536-DE043E03BA00}' />
     </window>
-    <window class='worksheet' name='Device/B2B/Day (2)'>
+    <window class='worksheet' name='B2B/Month (2)'>
       <cards>
         <edge name='left'>
           <strip size='200'>
@@ -701,21 +809,97 @@
       </cards>
       <simple-id uuid='{886A9960-3779-4A68-90CD-F217932C9E18}' />
     </window>
-    <window class='dashboard' maximized='true' name='Dash1'>
+    <window class='worksheet' name='Score/First Users/Device/Country'>
+      <cards>
+        <edge name='left'>
+          <strip size='200'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='38'>
+            <card type='columns' />
+          </strip>
+          <strip size='38'>
+            <card type='rows' />
+          </strip>
+          <strip size='38'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{5677D6FC-8B5D-486B-83CB-0BE5692B2513}' />
+    </window>
+    <window class='worksheet' name='Sheet 4'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{4C36B4EC-5566-4F05-A86D-338590E551AA}' />
+    </window>
+    <window class='worksheet' name='Sheet 5'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{AC161582-CD69-4476-98B8-803EC876809A}' />
+    </window>
+    <window class='dashboard' name='Dash1'>
       <viewpoints>
+        <viewpoint name='B2B/Month (2)'>
+          <zoom type='entire-view' />
+        </viewpoint>
         <viewpoint name='Device/B2B/Day'>
           <floating-toolbar-visibility value='2' />
           <default-map-tool-selection tool='1' />
         </viewpoint>
-        <viewpoint name='Device/B2B/Day (2)'>
-          <zoom type='entire-view' />
-        </viewpoint>
       </viewpoints>
-      <active id='-1' />
+      <active id='1' />
       <device-preview>
         <device name='Generic Desktop Monitor' type='Desktop' />
       </device-preview>
       <simple-id uuid='{0D1565C1-B366-4CB8-91CC-ED7FA1D420DF}' />
+    </window>
+    <window class='dashboard' maximized='true' name='Dashboard 2'>
+      <viewpoints>
+        <viewpoint name='Score/First Users/Device/Country' />
+      </viewpoints>
+      <active id='4' />
+      <simple-id uuid='{44E30F59-D4D9-4A47-8783-F8F1331D3EA8}' />
     </window>
   </windows>
 </workbook>
