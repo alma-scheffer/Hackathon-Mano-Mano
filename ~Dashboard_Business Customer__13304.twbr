@@ -5,7 +5,6 @@
   <document-format-change-manifest>
     <_.fcp.AccessibleZoneTabOrder.true...AccessibleZoneTabOrder />
     <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
-    <AutoCreateAndUpdateDSDPhoneLayouts />
     <IntuitiveSorting />
     <IntuitiveSorting_SP2 />
     <_.fcp.MarkAnimation.true...MarkAnimation />
@@ -719,38 +718,6 @@
       </zones>
       <simple-id uuid='{6FE58676-D4D8-4610-B1E1-08C50B388944}' />
     </dashboard>
-    <dashboard _.fcp.AccessibleZoneTabOrder.true...enable-sort-zone-taborder='true' name='Dashboard 2'>
-      <style />
-      <size maxheight='768' maxwidth='1366' minheight='768' minwidth='1366' preset-index='0' sizing-mode='fixed' />
-      <zones>
-        <zone h='100000' id='4' type-v2='layout-basic' w='100000' x='0' y='0'>
-          <zone-style>
-            <format attr='border-color' value='#000000' />
-            <format attr='border-style' value='none' />
-            <format attr='border-width' value='0' />
-            <format attr='margin' value='8' />
-          </zone-style>
-        </zone>
-        <zone h='97786' id='3' name='Score/First Users/Device/Country' w='60102' x='2416' y='1823' />
-      </zones>
-      <devicelayouts>
-        <devicelayout auto-generated='true' name='Phone'>
-          <size maxheight='700' minheight='700' sizing-mode='vscroll' />
-          <zones>
-            <zone h='100000' id='2' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='1' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000' />
-              <zone-style>
-                <format attr='border-color' value='#000000' />
-                <format attr='border-style' value='none' />
-                <format attr='border-width' value='0' />
-                <format attr='margin' value='8' />
-              </zone-style>
-            </zone>
-          </zones>
-        </devicelayout>
-      </devicelayouts>
-      <simple-id uuid='{CB711D55-C40F-4CE0-820C-D00E3D620788}' />
-    </dashboard>
   </dashboards>
   <windows source-height='30'>
     <window class='worksheet' name='Device/B2B/Day'>
@@ -781,7 +748,7 @@
       </cards>
       <simple-id uuid='{EBEA0EC3-D174-4AFE-9536-DE043E03BA00}' />
     </window>
-    <window class='worksheet' name='B2B/Month (2)'>
+    <window class='worksheet' maximized='true' name='B2B/Month (2)'>
       <cards>
         <edge name='left'>
           <strip size='200'>
@@ -888,18 +855,11 @@
           <default-map-tool-selection tool='1' />
         </viewpoint>
       </viewpoints>
-      <active id='1' />
+      <active id='-1' />
       <device-preview>
         <device name='Generic Desktop Monitor' type='Desktop' />
       </device-preview>
       <simple-id uuid='{0D1565C1-B366-4CB8-91CC-ED7FA1D420DF}' />
-    </window>
-    <window class='dashboard' maximized='true' name='Dashboard 2'>
-      <viewpoints>
-        <viewpoint name='Score/First Users/Device/Country' />
-      </viewpoints>
-      <active id='4' />
-      <simple-id uuid='{44E30F59-D4D9-4A47-8783-F8F1331D3EA8}' />
     </window>
   </windows>
 </workbook>
